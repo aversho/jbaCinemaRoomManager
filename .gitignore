@@ -2,11 +2,10 @@
 gradle/
 .gradle/
 /build.gradle
-/course-info.yaml
-/course-remote-info.yaml
 /gradlew
 /gradlew.bat
 /settings.gradle
 build/
 out/
 problems/
+*.yaml
