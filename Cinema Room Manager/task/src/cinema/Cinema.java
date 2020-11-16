@@ -1,21 +1,22 @@
 package cinema;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Cinema {
     private static char[][] cinemaRoom;
     private static int capacity;
+    private static int rows;
+    private static int seats;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the number of rows:");
-        int rows = sc.nextInt();
+        rows = sc.nextInt();
         System.out.println("Enter the number of seats in each row:");
-        int seats = sc.nextInt();
+        seats = sc.nextInt();
         System.out.println();
 
-        initState(rows, seats);
+        initCinemaRoom();
         printCinemaRoom();
 
         System.out.println("Enter a row number:");
@@ -24,12 +25,12 @@ public class Cinema {
         int seat = sc.nextInt();
         System.out.println();
 
-        System.out.println("Ticket price: $" + bookSeat(row, seat));
+        System.out.println("Ticket price: $" + getTicket(row, seat));
         System.out.println();
         printCinemaRoom();
     }
 
-    private static void initState(int rows, int seats) {
+    private static void initCinemaRoom() {
         cinemaRoom = new char[rows + 1][seats + 1];
         capacity = rows * seats;
         for (int i = 0; i <= rows; i++) {
@@ -51,20 +52,16 @@ public class Cinema {
         System.out.println();
     }
 
-    private static int bookSeat(int row, int seat) {
-        if (row > cinemaRoom.length || seat > cinemaRoom[row].length || cinemaRoom[row][seat] != 'S') {
-            return 0;
+    private static int getTicket(int row, int seat) {
+        if (row > rows || seat > seats || cinemaRoom[row][seat] != 'S') {
+            return -1;
         }
         cinemaRoom[row][seat] = 'B';
-        return getPrice(row);
+        return calcSeatPrice(row);
     }
 
-    private static int getPrice(int row) {
-        if (capacity <= 60) {
-            return 10;
-        }
-
-        return row <= (cinemaRoom.length - 1) / 2 ? 10 : 8;
+    private static int calcSeatPrice(int row) {
+        return capacity <= 60 || row <= (rows / 2) ? 10 : 8;
     }
 
     private static int calcProfit(int rows, int seats) {
