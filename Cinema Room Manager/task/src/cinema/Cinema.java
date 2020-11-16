@@ -9,12 +9,16 @@ public class Cinema {
         CinemaTheatre cinemaTheatre = new CinemaTheatre(askForTotalRows(), askForTotalSeats());
 
         while (true) {
+            System.out.println();
             switch (askForMenu()) {
                 case BUY:
-                    System.out.printf("Ticket price: $%d\n\n", cinemaTheatre.bookSeat(askForRow(),askForSeat()));
+                    cinemaTheatre.buyTicket();
                     break;
                 case SHOW:
                     cinemaTheatre.printRoom();
+                    break;
+                case STAT:
+                    cinemaTheatre.printStat();
                     break;
                 case EXIT:
                     System.exit(0);

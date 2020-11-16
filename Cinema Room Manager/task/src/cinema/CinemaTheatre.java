@@ -1,10 +1,17 @@
 package cinema;
 
 class CinemaTheatre {
-    private static char[][] cinemaRoom;
+    private final char SEAT_BOOKED = 'B';
+    private final char SEAT_FOR_SELL = 'S';
+    private final int PRICE_FULL = 10;
+    private final int PRICE_DISCOUNT = 8;
+    private char[][] cinemaRoom;
     private final int capacity;
     private final int rows;
     private final int seats;
+    private int soldTickets = 0;
+    private int profit = 0;
+
 
     CinemaTheatre(int rows, int seats) {
         this.rows = rows;
@@ -19,7 +26,7 @@ class CinemaTheatre {
 
         for (int i = 0; i <= rows; i++) {
             for (int j = 0; j <= seats; j++) {
-                char state = i == 0 ? j == 0 ? ' ' : (char) ('0' + j) : j == 0 ? (char) ('0' + i) : 'S';
+                char state = i == 0 ? j == 0 ? ' ' : (char) ('0' + j) : j == 0 ? (char) ('0' + i) : SEAT_FOR_SELL;
                 cinemaRoom[i][j] = state;
             }
         }
@@ -36,23 +43,52 @@ class CinemaTheatre {
         System.out.println();
     }
 
+    void printStat() {
+        System.out.printf("\nNumber of purchased tickets: %d\n" +
+                        "Percentage: %.2f%%\n" +
+                        "Current income: $%d\n" +
+                        "Total income: $%d\n",
+                soldTickets,
+                100.0 * soldTickets / capacity,
+                profit,
+                calcProfit());
+    }
+
+    void buyTicket() {
+        int price;
+
+        do {
+            price = bookSeat(Cinema.askForRow(), Cinema.askForSeat());
+        } while (price < 0);
+
+        soldTickets++;
+        profit += price;
+        System.out.printf("Ticket price: $%d\n\n", price);
+    }
+
     int bookSeat(int row, int seat) {
-        if (row > rows || seat > seats || cinemaRoom[row][seat] != 'S') {
+        if (row > rows || seat > seats || row < 1 || seat < 1) {
+            System.out.println("\nWrong input!");
             return -1;
         }
-        cinemaRoom[row][seat] = 'B';
+        if (cinemaRoom[row][seat] == SEAT_BOOKED) {
+            System.out.println("\nThat ticket has already been purchased!");
+            return -1;
+        }
+        cinemaRoom[row][seat] = SEAT_BOOKED;
+
         return calcSeatPrice(row);
     }
 
     private int calcSeatPrice(int row) {
-        return capacity <= 60 || row <= (rows / 2) ? 10 : 8;
+        return capacity <= 60 || row <= (rows / 2) ? PRICE_FULL : PRICE_DISCOUNT;
     }
 
-    private int calcProfit(int rows, int seats) {
-        if (rows * seats <= 60) {
-            return rows * seats * 10;
+    private int calcProfit() {
+        if (capacity <= 60) {
+            return capacity * PRICE_FULL;
         } else {
-            return rows / 2 * seats * 10 + (rows - rows / 2) * seats * 8;
+            return (rows / 2) * seats * PRICE_FULL + (rows - rows / 2) * seats * PRICE_DISCOUNT;
         }
     }
 }

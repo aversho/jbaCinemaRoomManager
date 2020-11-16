@@ -1,7 +1,10 @@
 package cinema;
 
 public enum MenuItems {
-    SHOW(1, "Show the seats"), BUY(2, "Buy a ticket"), EXIT(0, "Exit");
+    SHOW(1, "Show the seats"),
+    BUY(2, "Buy a ticket"),
+    STAT(3, "Statistics"),
+    EXIT(0, "Exit");
     private final String menuText;
     private final int menuNumber;
 
